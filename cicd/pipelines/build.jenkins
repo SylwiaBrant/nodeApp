@@ -9,7 +9,7 @@ podTemplate(label: label,
                     [name: 'docker-config', mountPath: '/kaniko/.docker']
         ],
         volumes: [
-            name: 'docker-config', configMap: [name: docker-config]
+            name: 'docker-config', configMap: [name: 'docker-config']
         ] ) {
     node(label) {
         stage('Checkout source code from git') {

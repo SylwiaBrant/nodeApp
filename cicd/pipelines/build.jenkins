@@ -6,15 +6,16 @@ podTemplate(label: label,
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
                 containerTemplate(
-                name: "kaniko",
-        image: "gcr.io/kaniko-project/executor:latest",
-        stdin: true,
-        stdinOnce: true,
+                name: 'kaniko',
+        image: 'gcr.io/kaniko-project/executor:latest',
         args: [
           "--dockerfile=Dockerfile",
-          "--context=tar://stdin",
+          "--context=/home/Users/sbrant/jenkinsPlay/kaniko/workspace",
           "--destination=gcr.io/my-repo/my-image"
         ])
+        ],
+        volumes: [
+            hostPathVolume(hostPath: '/home/Users/sbrant/jenkinsPlay/kaniko', mountPath: '/kaniko/.docker')
         ] ) {
     node(label) {
         stage('Checkout source code from git') {

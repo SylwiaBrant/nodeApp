@@ -29,7 +29,7 @@ podTemplate(label: label,
             container('ndlp') {
                 echo 'Pushing container'
             }
-        }*/
+        }
         stage('Deploy') {
             container('ndlp') {
                 echo 'Deployment phase'

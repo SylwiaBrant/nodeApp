@@ -7,12 +7,12 @@ podTemplate(label: label,
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
                 containerTemplate(
                 name: 'kaniko',
-        image: 'gcr.io/kaniko-project/executor:latest',
-        args: [
-          "--dockerfile=/workspace/Dockerfile",
-          "--context=dir://workspace",
-          "--destination=gcr.io/my-repo/my-image"
-        ])
+                image: 'gcr.io/kaniko-project/executor:latest',
+                args: 
+                '--dockerfile=/workspace/Dockerfile',
+                '--context=dir://workspace',
+                '--destination=/home/Users/sbrant/jenkinsPlay/'
+                )
         ],
         volumes: [
             name: 'dockerfile-storage', persistentVolumeClaim: [claimName: 'dockerfile-claim']

@@ -9,13 +9,13 @@ podTemplate(label: label,
                 name: 'kaniko',
         image: 'gcr.io/kaniko-project/executor:latest',
         args: [
-          "--dockerfile=Dockerfile",
-          "--context=/home/Users/sbrant/jenkinsPlay/kaniko/workspace",
+          "--dockerfile=/workspace/Dockerfile",
+          "--context=dir://workspace",
           "--destination=gcr.io/my-repo/my-image"
         ])
         ],
         volumes: [
-            hostPathVolume(hostPath: '/home/Users/sbrant/jenkinsPlay/kaniko', mountPath: '/kaniko/.docker')
+            name: 'dockerfile-storage', persistentVolumeClaim: claimName: 'dockerfile-claim'
         ] ) {
     node(label) {
         stage('Checkout source code from git') {

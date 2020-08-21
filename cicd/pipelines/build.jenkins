@@ -1,0 +1,40 @@
+#!/usr/bin/env groovy
+
+def label = "build-node-app-${UUID.randomUUID().toString()}"
+
+podTemplate(label: label,
+        containers: [
+                containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
+                containerTemplate(name: 'ndlp', image: 'node:current-alpine', command: 'cat', ttyEnabled: true),
+        ] ) {
+    node(label) {
+        stage('Checkout source code from git') {
+            timeout(time: 3, unit: 'MINUTES') {
+                checkout scm
+            }
+        }
+        stage('Compile') {
+            container('ndlp') {
+                sh 'pwd'
+                sh 'ls -la'
+                sh 'npm install'
+            }
+        }
+        stage('Build Docker Image') {
+            container('ndlp') {
+                sh 'docker build -t my-nodejs-app:1'
+            }
+        }        
+        stage('Push Container') {
+            container('ndlp') {
+                echo 'Pushing container'
+            }
+        }*/
+        stage('Deploy') {
+            container('ndlp') {
+                echo 'Deployment phase'
+              //  sh 'kubectl apply -f '
+            }
+        }
+    }
+}

@@ -8,10 +8,7 @@ podTemplate(label: label,
                 containerTemplate(
                 name: 'kaniko',
                 image: 'gcr.io/kaniko-project/executor:latest', command: '/busybox/cat', ttyEnabled: true)
-        ],
-        volumes: [
-            name: 'dockerfile-storage', persistentVolumeClaim: [claimName: 'dockerfile-claim']
-        ] ) {
+        ]) {
     node(label) {
         stage('Checkout source code from git') {
             timeout(time: 3, unit: 'MINUTES') {
@@ -22,7 +19,7 @@ podTemplate(label: label,
             container('kaniko') {
                 sh 'pwd'
                 sh 'ls -la'
-                sh '/kaniko/executor -f --dockerfile=/workspace/Dockerfile --context=dir://workspace --destination=/home/Users/sbrant/jenkinsPlay/'
+                sh '/kaniko/executor -f --dockerfile=/workspace/Dockerfile --context=dir://workspace --destination=/home/Users/sbrant/jenkinsPlay'
             }
         }
         stage('Build Docker Image') {

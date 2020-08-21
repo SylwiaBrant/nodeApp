@@ -6,7 +6,7 @@ podTemplate(label: label,
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
                 containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:latest', command: 'cat', ttyEnabled: true, volumeMounts:
-                    [name: 'docker-config', mountPath: '/kaniko/.docker']
+                    [name: 'docker-config', mountPath: '/kaniko/.docker'])
         ],
         volumes: [
             name: 'docker-config', configMap: [name: 'docker-config']

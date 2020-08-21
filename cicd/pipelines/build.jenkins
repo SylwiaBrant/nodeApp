@@ -15,7 +15,7 @@ podTemplate(label: label,
         ])
         ],
         volumes: [
-            name: 'dockerfile-storage', persistentVolumeClaim: claimName: 'dockerfile-claim'
+            name: 'dockerfile-storage', persistentVolumeClaim: [claimName: 'dockerfile-claim']
         ] ) {
     node(label) {
         stage('Checkout source code from git') {

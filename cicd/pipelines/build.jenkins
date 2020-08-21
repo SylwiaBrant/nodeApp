@@ -7,12 +7,7 @@ podTemplate(label: label,
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
                 containerTemplate(
                 name: 'kaniko',
-                image: 'gcr.io/kaniko-project/executor:latest',
-                args: 
-                '--dockerfile=/workspace/Dockerfile',
-                '--context=dir://workspace',
-                '--destination=/home/Users/sbrant/jenkinsPlay/'
-                )
+                image: 'gcr.io/kaniko-project/executor:latest', command: '/busybox/cat', ttyEnabled: true)
         ],
         volumes: [
             name: 'dockerfile-storage', persistentVolumeClaim: [claimName: 'dockerfile-claim']
@@ -27,6 +22,7 @@ podTemplate(label: label,
             container('kaniko') {
                 sh 'pwd'
                 sh 'ls -la'
+                sh '/kaniko/executor -f --dockerfile=/workspace/Dockerfile --context=dir://workspace --destination=/home/Users/sbrant/jenkinsPlay/'
             }
         }
         stage('Build Docker Image') {

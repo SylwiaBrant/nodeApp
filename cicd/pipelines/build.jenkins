@@ -5,7 +5,7 @@ def label = "build-node-app-${UUID.randomUUID().toString()}"
 podTemplate(label: label,
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
-                containerTemplate(name: 'ndlp', image: 'node:current-alpine', command: 'cat', ttyEnabled: true),
+                containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:latest', command: 'cat', ttyEnabled: true),
         ] ) {
     node(label) {
         stage('Checkout source code from git') {
@@ -14,26 +14,27 @@ podTemplate(label: label,
             }
         }
         stage('Compile') {
-            container('ndlp') {
+            container('kaniko') {
                 sh 'pwd'
                 sh 'ls -la'
-                sh 'docker run -d -p 5000:5000 --restart=always --name registry registry:2'
             }
         }
         stage('Build Docker Image') {
-            container('ndlp') {
+            container('kaniko') {
+                sh 'docker run -d -p 5000:5000 --restart=always --name registry registry:2'
                 sh 'docker build -t my-nodejs-app:1'
             }
         }        
         stage('Push Container') {
-            container('ndlp') {
+            container('kaniko') {
                 echo 'Pushing container'
                 sh 'docker push localhost:5000/my-nodejs-app:1'
             }
         }
         stage('Deploy') {
-            container('ndlp') {
+            container('kaniko') {
                 echo 'Deployment phase'
+                sh 'kubectl apply -f deploy/nodeApp_deploy.yaml'
             }
         }
     }

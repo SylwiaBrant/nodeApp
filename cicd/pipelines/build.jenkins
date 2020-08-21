@@ -5,11 +5,12 @@ def label = "build-node-app-${UUID.randomUUID().toString()}"
 podTemplate(label: label,
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
-                containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:latest', command: 'cat', ttyEnabled: true, volumeMounts:
-                    [name: 'docker-config', mountPath: '/kaniko/.docker'])
+                containerTemplate(name: 'kaniko', 
+                image: 'gcr.io/kaniko-project/executor:latest', 
+                command: 'cat', ttyEnabled: true)
         ],
         volumes: [
-            name: 'docker-config', configMap: [name: 'docker-config']
+            hostPathVolume(hostPath: '/src/app/', mountPath: '/kaniko/.docker')
         ] ) {
     node(label) {
         stage('Checkout source code from git') {

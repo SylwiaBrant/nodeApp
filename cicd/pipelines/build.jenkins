@@ -17,7 +17,7 @@ podTemplate(label: label,
             container('ndlp') {
                 sh 'pwd'
                 sh 'ls -la'
-                sh 'npm install'
+                sh 'docker run -d -p 5000:5000 --restart=always --name registry registry:2'
             }
         }
         stage('Build Docker Image') {
@@ -28,6 +28,7 @@ podTemplate(label: label,
         stage('Push Container') {
             container('ndlp') {
                 echo 'Pushing container'
+                sh 'docker push localhost:5000/my-nodejs-app:1'
             }
         }
         stage('Deploy') {

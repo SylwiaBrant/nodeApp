@@ -33,7 +33,6 @@ podTemplate(label: label,
         stage('Deploy') {
             container('ndlp') {
                 echo 'Deployment phase'
-              //  sh 'kubectl apply -f '
             }
         }
     }

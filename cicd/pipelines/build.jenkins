@@ -9,12 +9,13 @@ podTemplate(label: label,
                 name: 'kaniko',
                 image: 'gcr.io/kaniko-project/executor:latest',
                 alwaysPullImage: true,
-                command: '/busybox/cat', ttyEnabled: true
-        )],
+                command: '/busybox/cat', 
+                ttyEnabled: true)
+        ],
         volumes: [
-            mountPath: '../../../',
-            configMapName: 'docker-config'
-            ]) {
+            configMapVolume: (mountPath: '../../../', configMapName: 'docker-config')
+        ],
+        ) {
     node(label) {
         stage('Checkout source code from git') {
             timeout(time: 3, unit: 'MINUTES') {

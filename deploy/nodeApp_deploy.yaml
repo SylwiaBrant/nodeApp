@@ -1,0 +1,20 @@
+apiVersion: nodeApp/v1
+kind: Deployment
+metadata:
+  name: nodeApp
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            run: nodeApp
+    template:
+        metadata:
+            labels:
+                app: nodeApp
+        spec:
+            containers:
+            - name: nodeApp
+                image: my-nodejs-app:1
+                ports:
+                - containerPort: 3000
+                    protocol: TCP

@@ -10,8 +10,7 @@ podTemplate(label: label,
                 image: 'gcr.io/kaniko-project/executor:debug',
                 alwaysPullImage: true,
                 command: '/busybox/cat',
-                ttyEnabled: true,
-                workingDir: '/home/jenkins/')
+                ttyEnabled: true)
         ],
         volumes: [
             emptyDirVolume(mountPath: '/kaniko/.docker')
@@ -24,25 +23,17 @@ podTemplate(label: label,
             }
         }
         stage('Compile') {
-            container('kaniko') {
-                sh '/kaniko/executor --dockerfile=./Dockerfile --context=dir://. --no-push'
-            }
-        }
-        stage('Build Docker Image') {
-            container('kaniko') {
-                sh 'docker build -t my-nodejs-app:1'
-            }
-        }        
-        stage('Push Container') {
-            container('kaniko') {
-                echo 'Pushing container'
-                sh 'docker push localhost:5000/my-nodejs-app:1'
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                sh '''#!/busybox/sh
+            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --no-push
+          '''
             }
         }
         stage('Deploy') {
-            container('kaniko') {
+            container('jnlp') {
                 echo 'Deployment phase'
                 sh 'kubectl apply -f deploy/nodeApp_deploy.yaml'
+                sh 'kubectl apply -f deploy/nodeApp_service.yaml'
             }
         }
     }

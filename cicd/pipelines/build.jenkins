@@ -7,12 +7,14 @@ podTemplate(label: label,
             containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
             containerTemplate(
                 name: 'kaniko',
-                image: 'gcr.io/kaniko-project/executor:latest',
+                image: 'gcr.io/kaniko-project/executor:debug',
                 alwaysPullImage: true,
-                ttyEnabled: true)
+                command: '/busybox/cat',
+                ttyEnabled: true,
+                workingDir: '/home/jenkins/')
         ],
         volumes: [
-            emptyDirVolume(mountPath: '/kaniko-dir')
+            emptyDirVolume(mountPath: '/kaniko/.docker')
         ],
         ) {
     node(label) {

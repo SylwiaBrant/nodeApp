@@ -25,7 +25,7 @@ podTemplate(label: label,
         stage('Compile') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --no-push
+            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination docker.pkg.github.com/SylwiaBrant/nodeApp/my-node-app:1
           '''
             }
         }

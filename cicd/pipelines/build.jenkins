@@ -25,9 +25,7 @@ podTemplate(label: label,
         }
         stage('Compile') {
             container('kaniko') {
-                sh 'pwd'
-                sh 'ls -la'
-                sh '/kaniko/executor --dockerfile=`pwd`/Dockerfile --context=dir://`pwd` --no-push'
+                sh '/kaniko/executor --dockerfile=./Dockerfile --context=dir://. --no-push'
             }
         }
         stage('Build Docker Image') {

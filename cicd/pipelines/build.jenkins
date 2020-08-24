@@ -11,10 +11,10 @@ podTemplate(label: label,
                 alwaysPullImage: true,
                 command: '/busybox/cat', 
                 ttyEnabled: true,
-                workingDir: '/kaniko-dir')
+                workingDir: '/home/Users/jenkinsPlay/nodeApp')
         ],
         volumes: [
-            emptyDirVolume(mountPath: '/kaniko-dir')
+            emptyDirVolume(mountPath: '/home/Users/jenkinsPlay/nodeApp')
         ],
         ) {
     node(label) {

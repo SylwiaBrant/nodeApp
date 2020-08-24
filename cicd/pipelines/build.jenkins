@@ -12,7 +12,9 @@ podTemplate(label: label,
                 command: '/busybox/cat', ttyEnabled: true
         )],
         volumes: [
-                name: 'docker-config', configMap: [name: 'docker-config']]) {
+            mountPath: '../../../',
+            configMapName: 'docker-config'
+            ]) {
     node(label) {
         stage('Checkout source code from git') {
             timeout(time: 3, unit: 'MINUTES') {

@@ -10,10 +10,11 @@ podTemplate(label: label,
                 image: 'gcr.io/kaniko-project/executor:latest',
                 alwaysPullImage: true,
                 command: '/busybox/cat', 
-                ttyEnabled: true)
+                ttyEnabled: true,
+                workingDir: '../../../kaniko-dir')
         ],
         volumes: [
-            configMapVolume(mountPath: '../../../', configMapName: 'docker-config')
+            configMapVolume(mountPath: '../../../kaniko-dir', configMapName: 'docker-config')
         ],
         ) {
     node(label) {

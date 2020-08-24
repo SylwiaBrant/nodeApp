@@ -11,10 +11,10 @@ podTemplate(label: label,
                 alwaysPullImage: true,
                 command: '/busybox/cat', 
                 ttyEnabled: true,
-                workingDir: '/home/Users/sbrant/jenkinsPlay/nodeApp')
+                workingDir: '/kaniko-dir')
         ],
         volumes: [
-            configMapVolume(mountPath: '`pwd`/kaniko-dir', configMapName: 'docker-config')
+            emptyDirVolume(mountPath: '/kaniko-dir')
         ],
         ) {
     node(label) {
@@ -27,7 +27,7 @@ podTemplate(label: label,
             container('kaniko') {
                 sh 'pwd'
                 sh 'ls -la'
-                sh '/kaniko/executor --dockerfile=Dockerfile --context=../../../ --destination=localhost:3000:1'
+                sh '/kaniko/executor --dockerfile=Dockerfile --context=/kaniko-dir --destination=localhost:3000:1'
             }
         }
         stage('Build Docker Image') {

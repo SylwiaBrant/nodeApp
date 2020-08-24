@@ -7,7 +7,12 @@ podTemplate(label: label,
                 containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
                 containerTemplate(
                 name: 'kaniko',
-                image: 'gcr.io/kaniko-project/executor:latest', command: '/busybox/cat', ttyEnabled: true)
+                image: 'gcr.io/kaniko-project/executor:latest',
+                imagePullPolicy: Always,
+                command: "/busybox/cat", ttyEnabled: true,
+                volumeMounts: [name: 'docker-config', mountPath: 'kaniko/.docker']),
+                volumes: [
+                    name: 'docker-config', configMap: [name: 'docker-config']]
         ]) {
     node(label) {
         stage('Checkout source code from git') {
@@ -19,7 +24,7 @@ podTemplate(label: label,
             container('kaniko') {
                 sh 'pwd'
                 sh 'ls -la'
-                sh '/kaniko/executor -f --dockerfile=/workspace/Dockerfile --context=dir://workspace --destination=/home/Users/sbrant/jenkinsPlay'
+                sh '/kaniko/executor --dockerfile=Dockerfile --context=../../../ --destination=localhost:3000:1'
             }
         }
         stage('Build Docker Image') {

@@ -1,0 +1,7 @@
+{
+    "auths": {
+            "https://hub.docker.com/repository/docker/sylviab/node_app": {
+                "auth": "c3lsdmlhYjoxNnBpdGNocGF0Y2gxNg=="
+        }
+    }
+}

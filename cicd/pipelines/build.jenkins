@@ -8,7 +8,6 @@ podTemplate(label: label,
             containerTemplate(
                 name: 'kaniko',
                 image: 'gcr.io/kaniko-project/executor:debug',
-                alwaysPullImage: true,
                 command: '/busybox/cat',
                 ttyEnabled: true)
         ],
@@ -25,7 +24,7 @@ podTemplate(label: label,
         stage('Compile') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination docker.pkg.github.com/SylwiaBrant/nodeApp/my-node-app:1
+                docker run -ti --rm -v `pwd`:/workspace -v `pwd`/config.json:/kaniko/.docker/config.json:ro /kaniko/executor --dockerfile=Dockerfile --destination=my-node-app
           '''
             }
         }

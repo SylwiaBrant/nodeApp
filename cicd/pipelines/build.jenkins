@@ -12,7 +12,8 @@ podTemplate(label: label,
                 ttyEnabled: true)
         ],
         volumes: [
-            emptyDirVolume(mountPath: '/kaniko/.docker')
+            emptyDirVolume(mountPath: '/kaniko/.docker'),
+            secretVolume(mountPath: 'kaniko/.docker/config.json', secretName: 'docker-secret'
         ],
         ) {
     node(label) {
@@ -24,7 +25,9 @@ podTemplate(label: label,
         stage('Compile') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-                docker run -ti --rm -v `pwd`:/workspace -v `pwd`/config.json:/kaniko/.docker/config.json:ro /kaniko/executor --dockerfile=Dockerfile --destination=my-node-app
+                echo config.json > .docker/config.json
+                docker run -ti --rm -v `pwd`:/workspace -v `pwd`/config.json:/kaniko/.docker/config.json:ro  --dockerfile=Dockerfile --destination=my-node-app:1
+        
           '''
             }
         }

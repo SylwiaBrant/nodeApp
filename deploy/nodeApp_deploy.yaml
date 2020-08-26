@@ -15,7 +15,6 @@ spec:
             containers:
             - name: node-app-container
               image: sylviab/node_app:latest
-              command: ["node start"]
               ports:
               - containerPort: 3000
                 protocol: TCP

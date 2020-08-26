@@ -1,13 +1,10 @@
-apiVersion: nodeApp/v1
+apiVersion: v1
 kind: Service
 metadata:
-    name: nodeApp-service
+  name: node-app-service
 spec:
-    type: NodePort
-    selector:
-        app: nodeApp
-    ports:
-        - protocol: TCP
-        port: 3000
-        targetPort: 3000
-        NodePort: 30000
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

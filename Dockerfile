@@ -1,12 +1,10 @@
 FROM node:12-alpine
 # Create app directory from which it will execute
-RUN mkdir -p /src/app 
-WORKDIR /src/app
+WORKDIR /app
 # Install app dependencies
 # Ensure to use cache only if package remains unchanged
-COPY package.json /src/app/package.json
+COPY package.json /app
 RUN npm install
 # Bundle app source
-COPY . /src/app
+COPY . /app
 EXPOSE 3000
-CMD [ "node", "start" ]

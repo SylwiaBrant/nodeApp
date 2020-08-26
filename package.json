@@ -1,13 +1,21 @@
 {
-  "name": "docker_web_app",
+  "name": "node-app",
   "version": "1.0.0",
-  "description": "Node.js on Docker",
-  "author": "First Last <first.last@example.com>",
-  "main": "server.js",
+  "description": "lol",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SylwiaBrant/nodeApp.git"
+  },
+  "keywords": [
+    "lol"
+  ],
+  "author": "SylwiaBrant",
+  "license": "ISC",
   "dependencies": {
-    "express": "^4.16.1"
+    "express": "^4.17.1"
   }
 }

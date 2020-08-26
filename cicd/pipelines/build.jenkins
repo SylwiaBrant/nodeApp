@@ -7,12 +7,11 @@ podTemplate(label: label,
             containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
             containerTemplate(
                 name: 'kaniko',
-                image: 'gcr.io/kaniko-project/executor:debug',
+                image: 'mgit/base:kaniko-executor-debug-stable',
                 command: '/busybox/cat',
                 ttyEnabled: true)
         ],
         volumes: [
-            emptyDirVolume(mountPath: '/kaniko/.docker'),
             secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds')
         ],
         ) {
@@ -22,20 +21,22 @@ podTemplate(label: label,
                 checkout scm
             }
         }
-        stage('Compile') {
+        stage('Build and push image') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-                mkdir -p .docker
-                cp /docker/creds/config.json $HOME/.docker/
-            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app
+                set -e
+                mkdir -p /kaniko/.docker
+                cp /docker/creds/config.json /kaniko/.docker/
+                ls -la /kaniko/.docker/
+            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app:latest
           '''
             }
         }
-        stage('Deploy') {
-            container('jnlp') {
-                echo 'Deployment phase'
-                sh 'kubectl apply -f deploy/nodeApp_deploy.yaml'
-                sh 'kubectl apply -f deploy/nodeApp_service.yaml'
+        stage('Deploy to Kubernetes') {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                sh '''#!/busybox/sh
+                
+                '''
             }
         }
     }

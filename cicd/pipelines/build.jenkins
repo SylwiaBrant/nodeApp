@@ -11,7 +11,7 @@ podTemplate(label: label,
                 command: '/busybox/cat',
                 ttyEnabled: true)
         ],
-        serviceAccount: 'node-deployer',
+        serviceAccount: 'node-deployer-account',
         volumes: [
             secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds')
         ],
@@ -35,8 +35,9 @@ podTemplate(label: label,
         stage('Deploy to Kubernetes') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-                    'kubectl apply -f deploy/1_nodeApp_deployer_config.yaml'
-                    'kubectl apply -f deploy/2_nodeApp_deploy_all.yaml'
+
+                    kubectl apply -f deploy/1_nodeApp_deployer_config.yaml
+                    kubectl apply -f deploy/2_nodeApp_deploy_all.yaml
                 '''
             }
         }

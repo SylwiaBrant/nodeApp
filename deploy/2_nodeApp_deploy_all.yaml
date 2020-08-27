@@ -4,8 +4,6 @@ kind: Service
 metadata:
   namespace: node-app-namespace
   name: node-app-service
-  label: 
-    app: node-app
 spec:
   selector:
     matchLabels:

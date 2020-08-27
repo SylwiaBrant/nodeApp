@@ -5,6 +5,7 @@ def label = "build-node-app-${UUID.randomUUID().toString()}"
 podTemplate(label: label,
         containers: [
             containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:alpine'),
+            containerTemplate(name: 'kubectl', image: 'roffe/kubectl', command: 'cat', ttyEnabled: true),
             containerTemplate(
                 name: 'kaniko',
                 image: 'mgit/base:kaniko-executor-debug-stable',
@@ -22,6 +23,9 @@ podTemplate(label: label,
                 checkout scm
             }
         }
+        stage('Compile'){
+            
+        }
         stage('Build and push image') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
@@ -33,12 +37,9 @@ podTemplate(label: label,
             }
         }
         stage('Deploy to Kubernetes') {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-                sh '''#!/busybox/sh
-
-                    kubectl apply -f deploy/1_nodeApp_deployer_config.yaml
-                    kubectl apply -f deploy/2_nodeApp_deploy_all.yaml
-                '''
+            container(name: 'kubectl') {
+                sh 'kubectl apply -f deploy/1_nodeApp_deployer_config.yaml'
+                sh 'kubectl apply -f deploy/2_nodeApp_deploy_all.yaml'
             }
         }
     }

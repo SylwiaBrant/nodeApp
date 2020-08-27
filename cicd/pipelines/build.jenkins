@@ -14,7 +14,8 @@ podTemplate(label: label,
         ],
         serviceAccount: 'node-deployer-account',
         volumes: [
-            secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds')
+            secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds'),
+            hostPathVolume(hostPath: 'deploy/', mountPath: '/kubectl')
         ],
         ) {
     node(label) {
@@ -38,8 +39,7 @@ podTemplate(label: label,
         }
         stage('Deploy to Kubernetes') {
             container(name: 'kubectl') {
-                sh 'kubectl apply -f deploy/1_nodeApp_deployer_config.yaml'
-                sh 'kubectl apply -f deploy/2_nodeApp_deploy_all.yaml'
+                sh 'kubectl apply -f kubectl/2_nodeApp_deploy_all.yaml'
             }
         }
     }

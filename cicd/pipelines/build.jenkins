@@ -15,7 +15,7 @@ podTemplate(label: label,
         serviceAccount: 'node-deployer-account',
         volumes: [
             secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds'),
-            emptyDirVolume(mountPath: '/kubectl')
+            hostPathVolume(hostPath: '/deploy', mountPath: '/kubectl')
         ],
         ) {
     node(label) {
@@ -37,11 +37,20 @@ podTemplate(label: label,
           '''
             }
         }
+        stage('Build and push image') {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                sh '''#!/busybox/sh
+                set -e
+                mkdir -p /kaniko/.docker
+                cp /docker/creds/config.json /kaniko/.docker/
+                /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app:latest
+          '''
+            }
+        }
         stage('Deploy to Kubernetes') {
             container(name: 'kubectl') {
-                sh 'mkdir -p /kubectl/deploy'
-                sh 'cp $HOME/deploy/2_nodeApp_deploy_all.yaml'
-                sh 'kubectl apply -f kubectl/2_nodeApp_deploy_all.yaml'
+                sh 'ls -la'
+                sh 'kubectl apply -f deploy/2_node_app_deploy_all.yaml'
             }
         }
     }

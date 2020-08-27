@@ -6,8 +6,7 @@ metadata:
   name: node-app-service
 spec:
   selector:
-    matchLabels:
-      app: node-app
+    app: node-app
   type: NodePort
   ports:
     - protocol: TCP

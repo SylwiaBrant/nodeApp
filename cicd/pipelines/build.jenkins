@@ -28,16 +28,15 @@ podTemplate(label: label,
                 set -e
                 mkdir -p /kaniko/.docker
                 cp /docker/creds/config.json /kaniko/.docker/
-                ls -la /kaniko/.docker/
-            /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app:latest
+                /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app:latest
           '''
             }
         }
         stage('Deploy to Kubernetes') {
             container(name: 'kaniko', shell: '/busybox/sh') {
                 sh '''#!/busybox/sh
-                    'kubectl apply -f deploy/1_nodeApp_deployer_config.yaml"
-                    'kubectl apply -f deploy/2_nodeApp_deploy_all.yaml"
+                    'kubectl apply -f deploy/1_nodeApp_deployer_config.yaml'
+                    'kubectl apply -f deploy/2_nodeApp_deploy_all.yaml'
                 '''
             }
         }

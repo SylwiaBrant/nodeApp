@@ -37,16 +37,6 @@ podTemplate(label: label,
           '''
             }
         }
-        stage('Build and push image') {
-            container(name: 'kaniko', shell: '/busybox/sh') {
-                sh '''#!/busybox/sh
-                set -e
-                mkdir -p /kaniko/.docker
-                cp /docker/creds/config.json /kaniko/.docker/
-                /kaniko/executor --context `pwd` --dockerfile Dockerfile --verbosity debug --destination sylviab/node_app:latest
-          '''
-            }
-        }
         stage('Deploy to Kubernetes') {
             container(name: 'kubectl') {
                 sh 'ls -la'

@@ -15,7 +15,7 @@ podTemplate(label: label,
         serviceAccount: 'node-deployer-account',
         volumes: [
             secretVolume(secretName: 'docker-creds', mountPath: '/docker/creds'),
-            hostPathVolume(hostPath: 'deploy/', mountPath: '/kubectl')
+            hostPathVolume(hostPath: 'deploy/2_nodeApp_deploy_all.yaml', mountPath: '/kubectl')
         ],
         ) {
     node(label) {
